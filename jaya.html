@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhina Gym Membership Registration</title>
+
+  <!-- PWA manifest and icons -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <!-- Font Awesome for icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5XcD1zUJ2Bq5l9z1lqS2e5z9PjWq0I5EwQ+fQkNw5q8gq5c5F5Ck5Kf5Ck5Kf5Ck5Kf5Ck5KfQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      line-height: 1.6;
+      background: #f4f7fb;
+      color: #222;
+    }
+
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 8%;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .hero-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      max-width: 600px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      background: #ffcc00;
+      color: #000;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .plans,
+    .register,
+    .contact {
+      padding: 60px 8%;
+      text-align: center;
+    }
+
+    .plans h2,
+    .register h2,
+    .contact h2 {
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .plan-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .plan-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .plan-card.featured {
+      border: 2px solid #ffcc00;
+    }
+
+    .plan-card h3 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .price {
+      font-size: 1.4rem;
+      color: #e67e22;
+      margin-bottom: 15px;
+    }
+
+    .plan-card ul {
+      list-style: none;
+    }
+
+    .plan-card li {
+      margin: 10px 0;
+    }
+
+    /* Register section background */
+    .register {
+      padding: 60px 8%;
+      background: radial-gradient(circle at top left, #ffeaa7 0, #f4f7fb 42%, #ffffff 100%);
+    }
+
+    .register h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .register p.form-subtitle {
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    /* Progress bar */
+    .form-progress {
+      max-width: 800px;
+      margin: 0 auto 24px auto;
+      text-align: center;
+    }
+
+    .form-progress .steps {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .step-circle {
+      height: 34px;
+      width: 34px;
+      border-radius: 50%;
+      border: 3px solid #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6b7280;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .step-circle.active {
+      border-color: #f59e0b;
+      color: #111827;
+      background: #fef3c7;
+    }
+
+    .progress-track {
+      position: relative;
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-indicator {
+      position: absolute;
+      height: 100%;
+      width: 33.33%; /* default step 1 */
+      background: linear-gradient(90deg, #f59e0b, #f97316);
+      border-radius: inherit;
+      transition: width 0.25s ease;
+    }
+
+    .steps-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+
+    /* Layout: form + summary card */
+    .register-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr);
+      gap: 24px;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+
+    /* Form container */
+    #gymForm {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px 22px;
+      margin-bottom: 20px;
+    }
+
+    .form-field {
+      text-align: left;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 8px;
+      border: 1px solid #d0d4e3;
+      background: #f8f9ff;
+      font-size: 0.95rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus {
+      outline: none;
+      border-color: #ffcc00;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.25);
+    }
+
+    .form-field input::placeholder {
+      color: #9aa0b8;
+    }
+
+    /* Icons inside inputs */
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9aa0b8;
+      font-size: 0.9rem;
+    }
+
+    .input-with-icon input,
+    .input-with-icon select {
+      padding-left: 36px;
+    }
+
+    /* Submit + download buttons */
+    .btn.submit-btn {
+      margin-top: 10px;
+      background: linear-gradient(135deg, #ffcc00, #ff9f1c);
+      color: #000;
+      padding: 12px 32px;
+      border-radius: 999px;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn.submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+      opacity: 0.95;
+    }
+
+    #message {
+      margin-top: 18px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    /* Summary card */
+    .plan-summary {
+      background: #111827;
+      color: #f9fafb;
+      padding: 22px 20px;
+      border-radius: 16px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .plan-summary h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .plan-summary .plan-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .plan-summary .plan-price {
+      color: #fbbf24;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .plan-summary .plan-benefits {
+      list-style: none;
+      font-size: 0.9rem;
+    }
+
+    .plan-summary .plan-benefits li::before {
+      content: "• ";
+      color: #fbbf24;
+    }
+
+    /* QR section */
+    .qr-section {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    #qrcode {
+      margin: 20px auto;
+    }
+
+    #downloadQrBtn {
+      margin-top: 12px;
+    }
+
+    .contact {
+      background: #222;
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .register-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-summary {
+        margin-top: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <nav class="navbar">
+      <div class="logo">Dhina gym</div>
+      <ul class="nav-links">
+        <li><a href="#plans">Plans</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="hero-content">
+      <h1>Join Dhina Gym Today</h1>
+      <p>Start your fitness journey with flexible membership plans and expert support.</p>
+      <a href="#register" class="btn">Register Now</a>
+    </div>
+  </header>
+
+  <section id="plans" class="plans">
+    <h2>Membership Plans</h2>
+    <div class="plan-container">
+      <div class="plan-card">
+        <h3>Basic</h3>
+        <p class="price">₹999 / month</p>
+        <ul>
+          <li>Gym Access</li>
+          <li>Locker Facility</li>
+          <li>Basic Equipment</li>
+        </ul>
+      </div>
+
+      <div class="plan-card featured">
+        <h3>Standard</h3>
+        <p class="price">₹1499 / month</p>
+        <ul>
+          <li>Gym Access</li>
+          <li>Locker Facility</li>
+          <li>Trainer Guidance</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <h3>Premium</h3>
+        <p class="price">₹1999 / month</p>
+        <ul>
+          <li>Full Gym Access</li>
+          <li>Personal Trainer</li>
+          <li>Diet Plan</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="register" class="register">
+    <h2>Registration Form</h2>
+    <p class="form-subtitle">Fill in your details to start your fitness journey at Dhina Gym.</p>
+
+    <!-- Progress bar -->
+    <div class="form-progress">
+      <div class="steps">
+        <span class="step-circle active" data-step="1">1</span>
+        <span class="step-circle" data-step="2">2</span>
+        <span class="step-circle" data-step="3">3</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-indicator"></div>
+      </div>
+      <div class="steps-labels">
+        <span>Personal details</span>
+        <span>Plan selection</span>
+        <span>Payment</span>
+      </div>
+    </div>
+
+    <div class="register-layout">
+      <!-- Left: Form -->
+      <form id="gymForm">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="name">Full Name</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="name" placeholder="e.g. Rahul Kumar" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="age">Age</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-hashtag"></i>
+              <input type="number" id="age" placeholder="e.g. 22" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="gender">Gender</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-venus-mars"></i>
+              <select id="gender" required>
+                <option value="">Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="phone">Phone Number</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="phone" placeholder="e.g. +91 98765 43210" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="email" placeholder="e.g. you@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="address">Address</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-location-dot"></i>
+              <input type="text" id="address" placeholder="Street, City, Pincode" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="plan">Membership Plan</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-list-ul"></i>
+              <select id="plan" required>
+                <option value="">Select plan</option>
+                <option>Basic</option>
+                <option>Standard</option>
+                <option>Premium</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="startDate">Start Date</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-calendar-days"></i>
+              <input type="date" id="startDate" required />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn submit-btn">Submit Registration</button>
+        <p id="message"></p>
+
+        <div class="qr-section">
+          <h3>Pay via UPI QR</h3>
+          <p>Select a plan to generate payment QR code.</p>
+          <div id="qrcode"></div>
+
+          <!-- New: Download QR button -->
+          <button type="button" id="downloadQrBtn" class="btn submit-btn">
+            Download QR
+          </button>
+        </div>
+      </form>
+
+      <!-- Right: Summary card -->
+      <aside class="plan-summary">
+        <h3>Selected Plan</h3>
+        <p class="plan-name">No plan selected</p>
+        <p class="plan-price">₹0 / month</p>
+        <ul class="plan-benefits">
+          <li>Choose a plan to see benefits.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <p>Email: info@dhinagym.com</p>
+    <p>Phone: +91 8098439376</p>
+  </section>
+
+  <!-- QRCode.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    // Progress bar logic
+    const stepCircles = document.querySelectorAll(".step-circle");
+    const progressIndicator = document.querySelector(".progress-indicator");
+
+    function setStep(stepNumber) {
+      const totalSteps = stepCircles.length;
+      stepCircles.forEach(function (circle) {
+        const s = Number(circle.getAttribute("data-step"));
+        circle.classList.toggle("active", s === stepNumber);
+      });
+
+      const percentage = ((stepNumber - 1) / (totalSteps - 1)) * 100;
+      progressIndicator.style.width = percentage + "%";
+    }
+
+    // Initially show step 2 (Plan selection) as example
+    setStep(2);
+
+    // QR + summary logic
+    const qrcodeBox = document.getElementById("qrcode");
+    const planSelect = document.getElementById("plan");
+    const message = document.getElementById("message");
+
+    const planNameEl = document.querySelector(".plan-summary .plan-name");
+    const planPriceEl = document.querySelector(".plan-summary .plan-price");
+    const planBenefitsEl = document.querySelector(".plan-summary .plan-benefits");
+
+    function getPlanDetails(plan) {
+      switch (plan) {
+        case "Basic":
+          return {
+            price: "₹999 / month",
+            benefits: ["Gym access", "Locker facility", "Basic equipment"],
+            amount: 999
+          };
+        case "Standard":
+          return {
+            price: "₹1499 / month",
+            benefits: ["Gym access", "Locker facility", "Trainer guidance"],
+            amount: 1499
+          };
+        case "Premium":
+          return {
+            price: "₹1999 / month",
+            benefits: ["Full gym access", "Personal trainer", "Diet plan"],
+            amount: 1999
+          };
+        default:
+          return {
+            price: "₹0 / month",
+            benefits: ["Choose a plan to see benefits."],
+            amount: 0
+          };
+      }
+    }
+
+    function renderQR(amount, plan) {
+      qrcodeBox.innerHTML = "";
+      if (!amount || amount <= 0 || !plan) return;
+
+      const upiLink =
+        "upi://pay?pa=dhinakaranr83@okaxis&pn=Dhina%20Gym&am=" +
+        amount +
+        "&cu=INR&tn=" +
+        encodeURIComponent(plan + " Membership Payment");
+
+      new QRCode(qrcodeBox, {
+        text: upiLink,
+        width: 220,
+        height: 220
+      });
+    }
+
+    planSelect.addEventListener("change", function () {
+      const selectedPlan = planSelect.value;
+      const details = getPlanDetails(selectedPlan);
+
+      // Update summary card
+      planNameEl.textContent = selectedPlan || "No plan selected";
+      planPriceEl.textContent = details.price;
+      planBenefitsEl.innerHTML = "";
+
+      details.benefits.forEach(function (b) {
+        const li = document.createElement("li");
+        li.textContent = b;
+        planBenefitsEl.appendChild(li);
+      });
+
+      // Generate QR
+      renderQR(details.amount, selectedPlan);
+
+      // Progress bar: move to step 2 when plan picked
+      if (selectedPlan) {
+        setStep(2);
+      }
+    });
+
+    // Download QR button logic
+    const downloadQrBtn = document.getElementById("downloadQrBtn");
+
+    downloadQrBtn.addEventListener("click", function () {
+      const canvas = qrcodeBox.querySelector("canvas");
+      const img = qrcodeBox.querySelector("img");
+
+      if (!canvas && !img) {
+        alert("Please select a plan first to generate the QR code.");
+        return;
+      }
+
+      let dataUrl;
+
+      if (canvas) {
+        dataUrl = canvas.toDataURL("image/png");
+      } else {
+        dataUrl = img.src;
+      }
+
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "DhinaGym_QR.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Form submit logic
+    document.getElementById("gymForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const plan = document.getElementById("plan").value;
+      const startDate = document.getElementById("startDate").value;
+
+      if (
+        name === "" ||
+        age === "" ||
+        phone === "" ||
+        email === "" ||
+        address === "" ||
+        plan === "" ||
+        startDate === ""
+      ) {
+        message.style.color = "red";
+        message.textContent = "Please fill all required fields.";
+        return;
+      }
+
+      message.style.color = "green";
+      message.textContent = "Registration successful! Welcome to " + plan + " plan, " + name + ".";
+
+      // Progress bar: simulate moving to step 3 (Payment complete)
+      setStep(3);
+    });
+
+    // PWA: Service worker registration
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("service-worker.js")
+          .catch(function (error) {
+            console.log("Service Worker registration failed:", error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
